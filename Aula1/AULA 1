@@ -1,0 +1,97 @@
+A0 — Gerenciar Vendas com Cupons:
+
+Atividades (caixas de funções):
+I — Receber Pedido do Cliente
+Entradas: Dados do cliente, catálogo de produtos, carrinho.
+Controles: LGPD, meios de pagamento aceitos.
+Mecanismos: Site/app de e-commerce, equipe de atendimento.
+Saídas: Pedido preliminar, dados de pagamento.
+
+
+A2 — Validar Cupom
+Entradas: Código do cupom, pedido preliminar.
+Controles: Política de desconto, regras fiscais.
+Mecanismos: Banco de dados de cupons, API de validação.
+Saídas: Cupom validado/inválido, valor atualizado.
+
+A3 — Processar Pagamento
+Entradas: Pedido com cupom aplicado (se válido), dados do pagamento.
+Controles: Regras fiscais, meios de pagamento aceitos.
+Mecanismos: Gateway de pagamento, equipe financeira.
+Saídas: Pagamento aprovado/reprovado, recibo provisório.
+
+A4 — Confirmar Pedido e Registrar Logs
+Entradas: Pedido pago, cupom aplicado, recibo provisório.
+Controles: Política de desconto, LGPD.
+Mecanismos: Banco de dados, sistema de auditoria.
+Saídas: Pedido registrado, recibo final, logs de auditoria.
+
+5 visões ISO/IEC 10746 (RM-ODP)
+
+1) Visão de Negócio (Enterprise)
+Propósito: Aumentar a taxa de conversão de vendas utilizando cupons de desconto.
+Atores:
+Cliente – realiza a compra e aplica cupons.
+Marketing – define e publica cupons.
+Financeiro – valida regras fiscais e antifraude.
+Atendimento – auxilia clientes em casos de dúvidas ou erros.
+Políticas: Política de desconto, regras antifraude, conformidade LGPD, emissão de notas fiscais.
+Processos principais:
+Definir e configurar regras de cupons.
+Publicar cupons no canal de vendas.
+Realizar checkout com cupom aplicado.
+Executar auditoria do uso de cupons.
+
+2) Visão de Informação (Information)
+Entidades e conceitos:
+Cliente, Produto, Categoria, Pedido, Item_Pedido, Cupom, RegraCupom, LogCupom.
+Invariantes:
+O código de cupom deve ser único.
+Um cupom é válido se ativo = true e hoje ≤ validade.
+O valor do desconto não pode exceder o subtotal aplicável.
+Estados possíveis:
+Pedido: {CRIOU, PAGO, ENVIADO}
+Cupom: {ATIVO, EXPIRADO, SUSPENSO}
+Restrições:
+Cumprimento da LGPD para dados pessoais.
+Registro obrigatório de trilhas de auditoria para uso de cupons.
+
+3) Visão Computacional (Computational)
+Interfaces e serviços:
+CatalogService – listar produtos e categorias.
+CouponService – CRUD de cupons e validação/aplicação.
+OrderService – criar pedido, adicionar itens, finalizar compra.
+PaymentService – autorizar e capturar pagamentos.
+AuditService – registrar uso de cupons para auditoria.
+Contratos de serviço:
+Operação applyCoupon deve ser idempotente.
+Tempo de resposta máximo de 2 segundos para validação.
+Erros tipados para facilitar tratamento pelo cliente.
+
+4) Visão de Engenharia (Engineering)
+Distribuição e componentes:
+Front-end web.
+Backend com API REST.
+Banco de dados relacional.
+Cache para alto desempenho.
+Canais de comunicação:
+HTTP/REST para operações síncronas.
+Mensageria (eventos) para auditoria assíncrona.
+Infraestrutura:
+Balanceador de carga.
+Autoescalonamento do backend.
+Redis para cupons mais utilizados.
+Qualidade de serviço:
+Latência p95 do checkout inferior a 400 ms.
+Observabilidade com logs, métricas e traces.
+
+5) Visão Tecnológica (Technology)
+Stack recomendada:
+Backend: Node.js, Java ou .NET, com REST e OpenAPI.
+Banco de dados: PostgreSQL, com índices por codigo, validade_ate, pedido_id.
+Cache: Redis.
+Mensageria: Kafka ou RabbitMQ.
+Autenticação: OAuth2/OIDC.
+LGPD: Criptografia em repouso e em trânsito.
+CI/CD: GitHub Actions.
+Contêineres e orquestração: Docker e Kubernetes.
