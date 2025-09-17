@@ -1,2 +1,13 @@
 ESTUDO DE CASO: FÁBRICA DE CONCRETO – “CONCRETO +”
 
+1. **Importância da normalização para a integridade dos dados da fábrica**
+   A normalização foi essencial porque eliminou redundâncias e inconsistências, garantindo que cada dado tivesse um local único e bem definido no banco. Isso assegura que informações como fornecedores, materiais e receitas não sejam duplicadas ou divergentes, além de facilitar atualizações consistentes. Com isso, o controle de processos da fábrica se torna mais confiável, transparente e sustentável a longo prazo.
+
+2. **Situações em que a desnormalização é estratégica**
+   A desnormalização pode ser uma escolha estratégica em cenários em que a performance de consultas é mais crítica que a integridade total dos dados. Por exemplo, relatórios gerenciais que exigem união de múltiplas tabelas podem ter tempos de resposta elevados; nesse caso, criar uma tabela desnormalizada ou visão materializada acelera o acesso às informações mais usadas.
+
+3. **Riscos da desnormalização e formas de mitigação**
+   O principal risco é a redundância de dados, que pode levar a inconsistências quando as informações são atualizadas em apenas uma parte do sistema. Outro risco é o aumento do espaço de armazenamento. Para mitigar, podem-se usar triggers, rotinas de atualização automatizadas ou controles de integridade referencial que sincronizem dados redundantes de forma automática.
+
+4. **Impacto de não aplicar a BCNF no cenário da fábrica**
+   Se a Boyce-Codd Normal Form (BCNF) não fosse aplicada, haveria risco de dependências funcionais indevidas, resultando em anomalias de inserção, atualização e exclusão. Na fábrica, isso poderia gerar situações como uma receita vinculada incorretamente a múltiplos fornecedores ou inconsistência nas proporções de materiais. Em última análise, a ausência da BCNF comprometeria a confiabilidade do sistema, dificultando a tomada de decisão e aumentando os custos de manutenção.
