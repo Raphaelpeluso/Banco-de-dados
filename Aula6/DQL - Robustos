@@ -1,0 +1,82 @@
+-- Listar produtos que custam mais do que a média de todas as vendas
+SELECT produto, valor
+FROM VENDAS
+WHERE valor > (SELECT AVG(valor) FROM VENDAS)
+ORDER BY valor DESC;
+
+-- Para cada vendedor, mostrar sua maior venda
+SELECT v.vendedor, v.produto, v.valor
+FROM VENDAS v
+WHERE v.valor = (
+    SELECT MAX(valor)
+    FROM VENDAS
+    WHERE vendedor = v.vendedor
+);
+
+-- Somatório por categoria acima da média de todas as categorias
+SELECT categoria, SUM(valor) AS receita
+FROM VENDAS
+GROUP BY categoria
+HAVING SUM(valor) > (
+    SELECT AVG(soma_categoria)
+    FROM (
+        SELECT SUM(valor) AS soma_categoria
+        FROM VENDAS
+        GROUP BY categoria
+    )
+);
+
+-- Mostrar cada produto com o valor e também o valor médio geral
+SELECT
+    produto,
+    valor,
+    (SELECT AVG(valor) FROM VENDAS) AS media_geral
+FROM VENDAS
+ORDER BY valor DESC;
+
+-- Ranking dos vendedores por total vendido
+SELECT vendedor, total_vendido
+FROM (
+    SELECT vendedor, SUM(valor) AS total_vendido
+    FROM VENDAS
+    GROUP BY vendedor
+) ranking
+ORDER BY total_vendido DESC;
+
+--EX 1
+SELECT PRODUTO, VALOR, CATEGORIA
+FROM VENDAS
+WHERE VALOR > (
+    SELECT MIN(VALOR)
+    FROM VENDAS
+    WHERE CATEGORIA = 'Eletrônicos'
+);
+
+--EX 2
+SELECT VENDEDOR, DATA_VENDA, VALOR
+FROM VENDAS
+WHERE VALOR = (
+    SELECT MAX(VALOR)
+    FROM VENDAS
+);
+
+--EX3
+SELECT CATEGORIA, PRODUTO, VALOR
+FROM VENDAS
+WHERE VALOR > (
+    SELECT AVG(VALOR)
+    FROM VENDAS
+);
+
+--EX 4
+SELECT *
+FROM (
+    SELECT
+        vendedor,
+        produto,
+        valor,
+        ROW_NUMBER() OVER (PARTITION BY vendedor ORDER BY valor DESC) AS ranking
+    FROM VENDAS
+) t
+WHERE ranking <= 3;
+
